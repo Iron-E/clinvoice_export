@@ -89,25 +89,33 @@ pub enum Block<T>
 	/// A heading. `indents` is how many preceding `#`s there are.
 	Heading
 	{
-		indents: usize, text: T
+		/// The number of leading "#" characters.
+		indents: usize,
+
+		/// The text of the heading.
+		text: T,
 	},
 
 	/// A list which ascends in number with each successive use.
-	///
-	/// `indents` is how many preceding `\t` to use. Can be used to create sublists.
 	OrderedList
 	{
-		indents: usize, text: T
+		/// The number of leading tab characters.
+		indents: usize,
+
+		/// The text of the list.
+		text: T,
 	},
 
 	/// Plaintext.
 	Text(T),
 
 	/// A list which has no inherent order.
-	///
-	/// `indents` is how many preceding `\t` to use. Can be used to create sublists.
 	UnorderedList
 	{
-		indents: usize, text: T
+		/// The number of leading tab characters.
+		indents: usize,
+
+		/// The text of the list.
+		text: T
 	},
 }
