@@ -15,6 +15,8 @@
 //!
 //! [export]: Format::export_job
 
+#![warn(missing_docs)]
+
 mod format;
 
 #[cfg(feature = "markdown")]
