@@ -1,8 +1,12 @@
+mod from_str;
+
 use clinvoice_finance::ExchangeRates;
 use clinvoice_schema::{Contact, Job, Organization, Timesheet};
+use strum::{EnumIter, IntoStaticStr};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
-#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Debug, Eq, EnumIter, Hash, IntoStaticStr, Ord, PartialEq, PartialOrd)]
+#[strum(serialize_all = "snake_case")]
 pub enum Format
 {
 	/// The [markdown](https://en.wikipedia.org/wiki/Markdown) file format.

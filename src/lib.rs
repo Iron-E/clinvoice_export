@@ -17,6 +17,7 @@
 
 #![warn(missing_docs)]
 
+mod error;
 mod format;
 
 #[cfg(feature = "markdown")]
@@ -31,3 +32,4 @@ compile_error!(
 );
 
 pub use format::Format;
+pub use error::{Error, Result};

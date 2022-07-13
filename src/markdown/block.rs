@@ -116,6 +116,6 @@ pub enum Block<T>
 		indents: usize,
 
 		/// The text of the list.
-		text: T
+		text: T,
 	},
 }
