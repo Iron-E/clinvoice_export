@@ -31,5 +31,5 @@ compile_error!(
 * `markdown`"
 );
 
-pub use format::Format;
 pub use error::{Error, Result};
+pub use format::Format;

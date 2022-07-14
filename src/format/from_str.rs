@@ -1,9 +1,9 @@
 use core::str::FromStr;
 
-use crate::{Error, Result};
 use strum::IntoEnumIterator;
 
 use super::Format;
+use crate::{Error, Result};
 
 impl FromStr for Format
 {
