@@ -12,8 +12,8 @@ repository = "https://www.github.com/Iron-E/clinvoice-export"
 
 [dependencies]
 clinvoice-error = {branch = "release/0.3", git = "https://github.com/Iron-E/clinvoice-error"}
-clinvoice-finance = {branch = "release/0.3", git = "https://github.com/Iron-E/clinvoice-finance"}
-clinvoice-schema = {branch = "release/0.8", git = "https://github.com/Iron-E/clinvoice-schema"}
+clinvoice-finance = {branch = "release/0.4", git = "https://github.com/Iron-E/clinvoice-finance"}
+clinvoice-schema = {branch = "release/0.9", git = "https://github.com/Iron-E/clinvoice-schema"}
 
 strum = {features = ["derive"], version = "0.24"}
 thiserror = "1"
