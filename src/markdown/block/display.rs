@@ -2,9 +2,9 @@ use core::fmt::{Display, Formatter, Result};
 
 use super::Block;
 
-impl<D> Display for Block<D>
+impl<T> Display for Block<T>
 where
-	D: Display,
+	T: Display,
 {
 	fn fmt(&self, formatter: &mut Formatter<'_>) -> Result
 	{

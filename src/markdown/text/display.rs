@@ -2,9 +2,9 @@ use core::fmt::{Display, Formatter, Result};
 
 use super::Text;
 
-impl<D> Display for Text<D>
+impl<T> Display for Text<T>
 where
-	D: Display,
+	T: Display,
 {
 	fn fmt(&self, formatter: &mut Formatter<'_>) -> Result
 	{
