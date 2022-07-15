@@ -1,18 +1,13 @@
-use core::convert::TryFrom;
-
-use strum::IntoEnumIterator;
+use core::{convert::TryFrom, str::FromStr};
 
 use super::Format;
-use crate::{Error, Result};
 
 impl TryFrom<&str> for Format
 {
-	type Error = Error;
+	type Error = <Format as FromStr>::Err;
 
-	fn try_from(s: &str) -> Result<Self>
+	fn try_from(s: &str) -> Result<Self, Self::Error>
 	{
-		Format::iter()
-			.find(|f| s.eq_ignore_ascii_case(f.into()))
-			.ok_or_else(|| Error::UnsupportedFormat(s.to_string()))
+		s.parse()
 	}
 }
