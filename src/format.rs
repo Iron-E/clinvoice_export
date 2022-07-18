@@ -50,4 +50,20 @@ impl Format
 			},
 		}
 	}
+
+	/// Returns an appropriate file extension for the given [`Format`].
+	///
+	/// # Examples
+	///
+	/// ```rust
+	/// use clinvoice_export::Format;
+	/// assert_eq!(Format::Markdown.extension(), ".md");
+	/// ```
+	pub const fn extension(&self) -> &'static str
+	{
+		match self {
+			#[cfg(feature = "markdown")]
+			Self::Markdown => ".md",
+		}
+	}
 }
