@@ -3,10 +3,19 @@ mod try_from;
 
 use clinvoice_finance::ExchangeRates;
 use clinvoice_schema::{Contact, Job, Organization, Timesheet};
-use strum::{EnumIter, IntoStaticStr};
+use strum::{Display, EnumIter, IntoStaticStr};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
-#[derive(Copy, Clone, Debug, Eq, EnumIter, Hash, IntoStaticStr, Ord, PartialEq, PartialOrd)]
+///
+/// # Examples
+///
+/// ```rust
+/// use clinvoice_export::Format;
+/// assert_eq!(Format::Markdown.to_string(), "markdown");
+/// ```
+#[derive(
+	Copy, Clone, Debug, Display, Eq, EnumIter, Hash, IntoStaticStr, Ord, PartialEq, PartialOrd,
+)]
 #[strum(serialize_all = "snake_case")]
 pub enum Format
 {
@@ -61,7 +70,8 @@ impl Format
 	/// ```
 	pub const fn extension(&self) -> &'static str
 	{
-		match self {
+		match self
+		{
 			#[cfg(feature = "markdown")]
 			Self::Markdown => ".md",
 		}
