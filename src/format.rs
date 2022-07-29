@@ -1,3 +1,5 @@
+#![allow(clippy::use_self)]
+
 mod from_str;
 mod try_from;
 

@@ -206,8 +206,10 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 		indents: 3,
 		text: timesheet
 			.time_end
-			.map(|time_end| format!("{} – {}", timesheet.time_begin, time_end))
-			.unwrap_or_else(|| format!("{} – Current", timesheet.time_begin)),
+			.map_or_else(
+				|| format!("{} – Current", timesheet.time_begin),
+				|time_end| format!("{} – {}", timesheet.time_begin, time_end),
+			),
 	})
 	.unwrap();
 

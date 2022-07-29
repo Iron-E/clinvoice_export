@@ -1,7 +1,7 @@
 # See https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "clinvoice-export"
-version = "0.1.5"
+version = "0.1.8"
 authors = ["Iron-E <code.iron.e@gmail.com>"]
 description = "Export CLInvoice data to different file formats."
 
