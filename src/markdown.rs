@@ -204,12 +204,10 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 {
 	writeln!(output, "{}", Block::Heading {
 		indents: 3,
-		text: timesheet
-			.time_end
-			.map_or_else(
-				|| format!("{} – Current", timesheet.time_begin),
-				|time_end| format!("{} – {}", timesheet.time_begin, time_end),
-			),
+		text: timesheet.time_end.map_or_else(
+			|| format!("{} – Current", timesheet.time_begin),
+			|time_end| format!("{} – {}", timesheet.time_begin, time_end),
+		),
 	})
 	.unwrap();
 
