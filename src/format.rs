@@ -3,8 +3,8 @@
 mod from_str;
 mod try_from;
 
-use clinvoice_finance::ExchangeRates;
 use clinvoice_schema::{Contact, Job, Organization, Timesheet};
+use money2::ExchangeRates;
 use strum::{Display, EnumIter, IntoStaticStr};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.

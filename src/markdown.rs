@@ -8,7 +8,6 @@ mod text;
 use core::fmt::Write;
 
 pub use block::Block;
-use clinvoice_finance::ExchangeRates;
 use clinvoice_schema::{
 	chrono::{DateTime, Local},
 	Contact,
@@ -16,6 +15,7 @@ use clinvoice_schema::{
 	Organization,
 	Timesheet,
 };
+use money2::ExchangeRates;
 pub use text::Text;
 
 /// Export some `job` to [Markdown](crate::Format::Markdown).
@@ -266,7 +266,6 @@ mod tests
 {
 	use core::time::Duration;
 
-	use clinvoice_finance::{Currency, Money};
 	use clinvoice_schema::{
 		chrono::Utc,
 		Contact,
@@ -277,6 +276,7 @@ mod tests
 		Location,
 		Organization,
 	};
+	use money2::{Currency, Money};
 
 	use super::{DateTime, Job, Local, Timesheet};
 
