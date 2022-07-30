@@ -1,8 +1,10 @@
 #![allow(clippy::std_instead_of_core)]
 
+use core::result::Result as StdResult;
+
 use thiserror::Error;
 
-/// An [`Error`](std::error::Error) type for the library.
+/// An [`Error`](std::error::Error) for the crate.
 #[derive(Debug, Error)]
 pub enum Error
 {
@@ -11,4 +13,5 @@ pub enum Error
 	UnsupportedFormat(String),
 }
 
-clinvoice_error::AliasResult!();
+/// A [`Result`](StdResult) for the library.
+pub type Result<T> = StdResult<T, Error>;
