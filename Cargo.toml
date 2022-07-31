@@ -1,7 +1,7 @@
 # See https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "clinvoice-export"
-version = "0.1.12"
+version = "0.1.13"
 authors = ["Iron-E <code.iron.e@gmail.com>"]
 description = "Export CLInvoice data to different file formats."
 
@@ -13,7 +13,7 @@ repository = "https://www.github.com/Iron-E/clinvoice-export"
 [dependencies]
 clinvoice-schema = {branch = "release/0.10", git = "https://github.com/Iron-E/clinvoice-schema"}
 
-money2 = "0.6"
+money2 = "0.7"
 strum = {features = ["derive"], version = "0.24"}
 thiserror = "1"
 
