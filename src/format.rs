@@ -55,10 +55,13 @@ impl Format
 		match self
 		{
 			#[cfg(feature = "markdown")]
-			Self::Markdown =>
-			{
-				crate::markdown::export_job(job, contact_info, exchange_rates, organization, timesheets)
-			},
+			Self::Markdown => crate::markdown::export_job(
+				job,
+				contact_info,
+				exchange_rates,
+				organization,
+				timesheets,
+			),
 		}
 	}
 

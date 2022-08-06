@@ -27,8 +27,8 @@ pub use text::Text;
 /// * The following fields must all contain valid markdown syntax:
 ///   * The `objectives` and `notes` of the `job`.
 ///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
-///   * The `category` and `description` of every [`Expense`] of the `expenses` of every [`Timesheet`] of
-///     the `timesheets`.
+///   * The `category` and `description` of every [`Expense`] of the `expenses` of every
+///     [`Timesheet`] of the `timesheets`.
 ///
 /// # Panics
 ///
@@ -45,17 +45,14 @@ pub(super) fn export_job(
 
 	writeln!(output, "{}", Block::Heading {
 		indents: 1,
-		text: format!("{} – Job №{}", organization.name, job.id),
+		text:    format!("{} – Job №{}", organization.name, job.id),
 	})
 	.unwrap();
 
 	writeln!(
 		output,
 		"{}: {}",
-		Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Client"),
-		},
+		Block::UnorderedList { indents: 0, text: Text::Bold("Client") },
 		job.client,
 	)
 	.unwrap();
@@ -63,10 +60,7 @@ pub(super) fn export_job(
 	writeln!(
 		output,
 		"{}: {}",
-		Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Date Opened"),
-		},
+		Block::UnorderedList { indents: 0, text: Text::Bold("Date Opened") },
 		DateTime::<Local>::from(job.date_open),
 	)
 	.unwrap();
@@ -76,10 +70,7 @@ pub(super) fn export_job(
 		writeln!(
 			output,
 			"{}: {}",
-			Block::UnorderedList {
-				indents: 0,
-				text: Text::Bold("Date Closed"),
-			},
+			Block::UnorderedList { indents: 0, text: Text::Bold("Date Closed") },
 			DateTime::<Local>::from(date),
 		)
 		.unwrap();
@@ -89,37 +80,25 @@ pub(super) fn export_job(
 
 	if !job.objectives.is_empty()
 	{
-		writeln!(output, "{}", Block::Heading {
-			indents: 2,
-			text: "Objectives",
-		})
-		.unwrap();
+		writeln!(output, "{}", Block::Heading { indents: 2, text: "Objectives" }).unwrap();
 
 		writeln!(output, "{}", Block::Text(&job.objectives)).unwrap();
 	}
 
 	if !job.notes.is_empty()
 	{
-		writeln!(output, "{}", Block::Heading {
-			indents: 2,
-			text: "Notes",
-		})
-		.unwrap();
+		writeln!(output, "{}", Block::Heading { indents: 2, text: "Notes" }).unwrap();
 
 		writeln!(output, "{}", Block::Text(&job.notes)).unwrap();
 	}
 
-	writeln!(output, "{}", Block::Heading {
-		indents: 2,
-		text: "Invoice",
-	})
-	.unwrap();
+	writeln!(output, "{}", Block::Heading { indents: 2, text: "Invoice" }).unwrap();
 
 	if !contact_info.is_empty()
 	{
 		writeln!(output, "{}:", Block::UnorderedList {
 			indents: 0,
-			text: Text::Bold("Contact Information"),
+			text:    Text::Bold("Contact Information"),
 		})
 		.unwrap();
 
@@ -129,10 +108,7 @@ pub(super) fn export_job(
 				writeln!(
 					output,
 					"{}: {}",
-					Block::UnorderedList {
-						indents: 1,
-						text: Text::Bold(&contact.label),
-					},
+					Block::UnorderedList { indents: 1, text: Text::Bold(&contact.label) },
 					contact.kind,
 				)
 			})
@@ -142,10 +118,7 @@ pub(super) fn export_job(
 	writeln!(
 		output,
 		"{} {}",
-		Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Hourly Rate"),
-		},
+		Block::UnorderedList { indents: 0, text: Text::Bold("Hourly Rate") },
 		job.invoice.hourly_rate,
 	)
 	.unwrap();
@@ -155,10 +128,7 @@ pub(super) fn export_job(
 		writeln!(
 			output,
 			"{}: {}",
-			Block::UnorderedList {
-				indents: 0,
-				text: Text::Bold("Status"),
-			},
+			Block::UnorderedList { indents: 0, text: Text::Bold("Status") },
 			date,
 		)
 		.unwrap();
@@ -167,10 +137,7 @@ pub(super) fn export_job(
 	writeln!(
 		output,
 		"{}: {}",
-		Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Total Amount Owed"),
-		},
+		Block::UnorderedList { indents: 0, text: Text::Bold("Total Amount Owed") },
 		Timesheet::total_all(timesheets, exchange_rates, job.invoice.hourly_rate),
 	)
 	.unwrap();
@@ -179,15 +146,9 @@ pub(super) fn export_job(
 
 	if !timesheets.is_empty()
 	{
-		writeln!(output, "{}", Block::Heading {
-			indents: 2,
-			text: "Timesheets",
-		})
-		.unwrap();
+		writeln!(output, "{}", Block::Heading { indents: 2, text: "Timesheets" }).unwrap();
 
-		timesheets
-			.iter()
-			.for_each(|timesheet| export_timesheet(timesheet, &mut output));
+		timesheets.iter().for_each(|timesheet| export_timesheet(timesheet, &mut output));
 	}
 
 	output
@@ -204,7 +165,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 {
 	writeln!(output, "{}", Block::Heading {
 		indents: 3,
-		text: timesheet.time_end.map_or_else(
+		text:    timesheet.time_end.map_or_else(
 			|| format!("{} – Current", timesheet.time_begin),
 			|time_end| format!("{} – {}", timesheet.time_begin, time_end),
 		),
@@ -214,10 +175,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 	writeln!(
 		output,
 		"{}: {} {}",
-		Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Employee"),
-		},
+		Block::UnorderedList { indents: 0, text: Text::Bold("Employee") },
 		timesheet.employee.title,
 		timesheet.employee.name,
 	)
@@ -227,11 +185,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 
 	if !timesheet.expenses.is_empty()
 	{
-		writeln!(output, "{}", Block::Heading {
-			indents: 4,
-			text: "Expenses",
-		})
-		.unwrap();
+		writeln!(output, "{}", Block::Heading { indents: 4, text: "Expenses" }).unwrap();
 
 		timesheet
 			.expenses
@@ -242,7 +196,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 					"{}\n{}",
 					Block::Heading {
 						indents: 5,
-						text: format!("№{} – {} ({})", e.id, e.category, e.cost),
+						text:    format!("№{} – {} ({})", e.id, e.category, e.cost),
 					},
 					Block::Text(&e.description),
 				)
@@ -252,11 +206,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 
 	if !timesheet.work_notes.is_empty()
 	{
-		writeln!(output, "{}", Block::Heading {
-			indents: 4,
-			text: "Work Notes",
-		})
-		.unwrap();
+		writeln!(output, "{}", Block::Heading { indents: 4, text: "Work Notes" }).unwrap();
 		writeln!(output, "{}", Block::Text(&timesheet.work_notes)).unwrap();
 	}
 }
@@ -286,24 +236,24 @@ mod tests
 		let client = Organization {
 			id: 0,
 			location: Location {
-				id: 0,
-				name: "1337 Some Street".into(),
+				id:    0,
+				name:  "1337 Some Street".into(),
 				outer: Some(
 					Location {
-						id: 1,
-						name: "Phoenix".into(),
+						id:    1,
+						name:  "Phoenix".into(),
 						outer: Some(
 							Location {
-								id: 2,
-								name: "Arizona".into(),
+								id:    2,
+								name:  "Arizona".into(),
 								outer: Some(
 									Location {
-										id: 3,
-										name: "USA".into(),
+										id:    3,
+										name:  "USA".into(),
 										outer: Some(
 											Location {
-												id: 4,
-												name: "Earth".into(),
+												id:    4,
+												name:  "Earth".into(),
 												outer: None,
 											}
 											.into(),
@@ -321,39 +271,30 @@ mod tests
 			name: "Big Old Test".into(),
 		};
 
-		let testy_organization = Organization {
-			id: 1,
-			name: "TestyCo".into(),
-			location: client.location.clone(),
-		};
+		let testy_organization =
+			Organization { id: 1, name: "TestyCo".into(), location: client.location.clone() };
 
 		let mut contact_info = [
 			Contact {
-				kind: ContactKind::Email("foo@bar.io".into()),
+				kind:  ContactKind::Email("foo@bar.io".into()),
 				label: "primary email".into(),
 			},
-			Contact {
-				kind: ContactKind::Phone("687 5309".into()),
-				label: "primary phone".into(),
-			},
-			Contact {
-				kind: ContactKind::Other("TestyCo".into()),
-				label: "twitter".into(),
-			},
+			Contact { kind: ContactKind::Phone("687 5309".into()), label: "primary phone".into() },
+			Contact { kind: ContactKind::Other("TestyCo".into()), label: "twitter".into() },
 		];
 
 		let testy_mctesterson = Employee {
-			id: Default::default(),
-			name: "Testy McTesterson".into(),
+			id:     Default::default(),
+			name:   "Testy McTesterson".into(),
 			status: "Representative".into(),
-			title: "CEO of Tests".into(),
+			title:  "CEO of Tests".into(),
 		};
 
 		let bob = Employee {
-			id: Default::default(),
-			name: "Bob".into(),
+			id:     Default::default(),
+			name:   "Bob".into(),
 			status: "Employed".into(),
-			title: "Janitor".into(),
+			title:  "Janitor".into(),
 		};
 
 		let mut job = Job {
@@ -362,10 +303,7 @@ mod tests
 			date_open: Utc::today().and_hms(0, 0, 0),
 			id: Default::default(),
 			increment: Duration::from_secs(900),
-			invoice: Invoice {
-				date: None,
-				hourly_rate: Money::new(20_00, 2, Currency::Usd),
-			},
+			invoice: Invoice { date: None, hourly_rate: Money::new(20_00, 2, Currency::Usd) },
 			notes: "- I tested the function.".into(),
 			objectives: "- I want to test this function.".into(),
 		};
@@ -428,13 +366,7 @@ mod tests
 		];
 
 		assert_eq!(
-			super::export_job(
-				&job,
-				&mut contact_info,
-				None,
-				&testy_organization,
-				&timesheets
-			),
+			super::export_job(&job, &mut contact_info, None, &testy_organization, &timesheets),
 			format!(
 				"# TestyCo – Job №{}
 
