@@ -13,7 +13,6 @@ repository = "https://www.github.com/Iron-E/clinvoice-export"
 [dependencies]
 clinvoice-schema = {branch = "release/0.11", git = "https://github.com/Iron-E/clinvoice-schema"}
 
-money2 = "0.8"
 strum = {features = ["derive"], version = "0.24"}
 thiserror = "1"
 

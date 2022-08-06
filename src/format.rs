@@ -4,7 +4,6 @@ mod from_str;
 mod try_from;
 
 use clinvoice_schema::{Contact, Job, Organization, Timesheet};
-use money2::ExchangeRates;
 use strum::{Display, EnumIter, IntoStaticStr};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
@@ -32,36 +31,30 @@ impl Format
 	///
 	/// `contact_info` and `timesheets` are exported in the order given.
 	///
+	/// # Returns
+	///
+	/// * [`Some`] when all provided data uses the same [`Currency`](clinvoice_schema::Currency).
+	/// * [`None`] otherwise.
+	///
 	/// # Warnings
 	///
-	/// * The following fields must all contain valid markdown syntax:
+	/// * The following fields must all contain valid syntax of the [`Format`] specified:
 	///   * The `objectives` and `notes` of the `job`.
 	///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
 	///   * The `category` and `description` of every [`Expense`] of the `expenses` of every
 	///     [`Timesheet`] of the `timesheets`.
-	///
-	/// # Panics
-	///
-	/// * When [`Timesheet::total`](clinvoice_schema::Timesheet::total) does.
 	pub fn export_job(
 		&self,
 		job: &Job,
 		contact_info: &[Contact],
-		exchange_rates: Option<&ExchangeRates>,
 		organization: &Organization,
 		timesheets: &[Timesheet],
-	) -> String
+	) -> Option<String>
 	{
 		match self
 		{
 			#[cfg(feature = "markdown")]
-			Self::Markdown => crate::markdown::export_job(
-				job,
-				contact_info,
-				exchange_rates,
-				organization,
-				timesheets,
-			),
+			Self::Markdown => crate::markdown::export_job(job, contact_info, organization, timesheets),
 		}
 	}
 

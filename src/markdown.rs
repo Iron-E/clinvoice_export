@@ -15,12 +15,16 @@ use clinvoice_schema::{
 	Organization,
 	Timesheet,
 };
-use money2::ExchangeRates;
 pub use text::Text;
 
 /// Export some `job` to [Markdown](crate::Format::Markdown).
 ///
 /// `contact_info` and `timesheets` are exported in the order given.
+///
+/// # Returns
+///
+/// * [`Some`] when all provided data uses the same [`Currency`](clinvoice_schema::Currency).
+/// * [`None`] otherwise.
 ///
 /// # Warnings
 ///
@@ -29,17 +33,12 @@ pub use text::Text;
 ///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
 ///   * The `category` and `description` of every [`Expense`] of the `expenses` of every
 ///     [`Timesheet`] of the `timesheets`.
-///
-/// # Panics
-///
-/// * When [`Timesheet::total`](clinvoice_schema::Timesheet::total) does.
 pub(super) fn export_job(
 	job: &Job,
 	contact_info: &[Contact],
-	exchange_rates: Option<&ExchangeRates>,
 	organization: &Organization,
 	timesheets: &[Timesheet],
-) -> String
+) -> Option<String>
 {
 	let mut output = String::new();
 
@@ -134,11 +133,12 @@ pub(super) fn export_job(
 		.unwrap();
 	}
 
+	let total = Timesheet::total_all(timesheets, job.invoice.hourly_rate)?;
 	writeln!(
 		output,
 		"{}: {}",
 		Block::UnorderedList { indents: 0, text: Text::Bold("Total Amount Owed") },
-		Timesheet::total_all(timesheets, exchange_rates, job.invoice.hourly_rate),
+		total,
 	)
 	.unwrap();
 
@@ -151,7 +151,7 @@ pub(super) fn export_job(
 		timesheets.iter().for_each(|timesheet| export_timesheet(timesheet, &mut output));
 	}
 
-	output
+	Some(output)
 }
 
 /// Export some `timesheet` to [Markdown](crate::Format::Markdown).
@@ -220,13 +220,14 @@ mod tests
 		chrono::Utc,
 		Contact,
 		ContactKind,
+		Currency,
 		Employee,
 		Expense,
 		Invoice,
 		Location,
+		Money,
 		Organization,
 	};
-	use money2::{Currency, Money};
 
 	use super::{DateTime, Job, Local, Timesheet};
 
@@ -309,8 +310,8 @@ mod tests
 		};
 
 		assert_eq!(
-			super::export_job(&job, &mut contact_info, None, &testy_organization, &[]),
-			format!(
+			super::export_job(&job, &mut contact_info, &testy_organization, &[]),
+			Some(format!(
 				"# TestyCo – Job №{}
 
 - **Client**: Big Old Test @ 1337 Some Street, Phoenix, Arizona, USA, Earth
@@ -334,7 +335,7 @@ mod tests
 - **Total Amount Owed**: 0.00 USD\n\n",
 				job.id,
 				DateTime::<Local>::from(job.date_open),
-			),
+			)),
 		);
 
 		job.date_close = Some(Utc::today().and_hms(4, 30, 0));
@@ -366,8 +367,8 @@ mod tests
 		];
 
 		assert_eq!(
-			super::export_job(&job, &mut contact_info, None, &testy_organization, &timesheets),
-			format!(
+			super::export_job(&job, &mut contact_info, &testy_organization, &timesheets),
+			Some(format!(
 				"# TestyCo – Job №{}
 
 - **Client**: Big Old Test @ 1337 Some Street, Phoenix, Arizona, USA, Earth
@@ -422,7 +423,7 @@ Paid for someone else to clean
 				timesheets[1].time_begin,
 				timesheets[1].time_end.unwrap(),
 				timesheets[1].expenses[0].id,
-			),
+			)),
 		);
 	}
 }
