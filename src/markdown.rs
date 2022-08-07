@@ -26,6 +26,10 @@ pub use text::Text;
 /// * [`Some`] when all provided data uses the same [`Currency`](clinvoice_schema::Currency).
 /// * [`None`] otherwise.
 ///
+/// # Panics
+///
+/// * When [`Timesheet::total_all`] does.
+///
 /// # Warnings
 ///
 /// * The following fields must all contain valid markdown syntax:
@@ -38,7 +42,7 @@ pub(super) fn export_job(
 	contact_info: &[Contact],
 	organization: &Organization,
 	timesheets: &[Timesheet],
-) -> Option<String>
+) -> String
 {
 	let mut output = String::new();
 
@@ -133,12 +137,11 @@ pub(super) fn export_job(
 		.unwrap();
 	}
 
-	let total = Timesheet::total_all(timesheets, job.invoice.hourly_rate)?;
 	writeln!(
 		output,
 		"{}: {}",
 		Block::UnorderedList { indents: 0, text: Text::Bold("Total Amount Owed") },
-		total,
+		Timesheet::total_all(timesheets, job.invoice.hourly_rate),
 	)
 	.unwrap();
 
@@ -151,7 +154,7 @@ pub(super) fn export_job(
 		timesheets.iter().for_each(|timesheet| export_timesheet(timesheet, &mut output));
 	}
 
-	Some(output)
+	output
 }
 
 /// Export some `timesheet` to [Markdown](crate::Format::Markdown).
@@ -311,7 +314,7 @@ mod tests
 
 		assert_eq!(
 			super::export_job(&job, &mut contact_info, &testy_organization, &[]),
-			Some(format!(
+			format!(
 				"# TestyCo – Job №{}
 
 - **Client**: Big Old Test @ 1337 Some Street, Phoenix, Arizona, USA, Earth
@@ -335,7 +338,7 @@ mod tests
 - **Total Amount Owed**: 0.00 USD\n\n",
 				job.id,
 				DateTime::<Local>::from(job.date_open),
-			)),
+			),
 		);
 
 		job.date_close = Some(Utc::today().and_hms(4, 30, 0));
@@ -368,7 +371,7 @@ mod tests
 
 		assert_eq!(
 			super::export_job(&job, &mut contact_info, &testy_organization, &timesheets),
-			Some(format!(
+			format!(
 				"# TestyCo – Job №{}
 
 - **Client**: Big Old Test @ 1337 Some Street, Phoenix, Arizona, USA, Earth
@@ -423,7 +426,7 @@ Paid for someone else to clean
 				timesheets[1].time_begin,
 				timesheets[1].time_end.unwrap(),
 				timesheets[1].expenses[0].id,
-			)),
+			),
 		);
 	}
 }

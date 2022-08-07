@@ -49,7 +49,7 @@ impl Format
 		contact_info: &[Contact],
 		organization: &Organization,
 		timesheets: &[Timesheet],
-	) -> Option<String>
+	) -> String
 	{
 		match self
 		{
