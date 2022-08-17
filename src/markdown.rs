@@ -48,7 +48,7 @@ pub(super) fn export_job(
 
 	writeln!(output, "{}", Block::Heading {
 		indents: 1,
-		text:    format!("{} – Job №{}", organization.name, job.id),
+		text: format!("{} – Job №{}", organization.name, job.id),
 	})
 	.unwrap();
 
@@ -101,7 +101,7 @@ pub(super) fn export_job(
 	{
 		writeln!(output, "{}:", Block::UnorderedList {
 			indents: 0,
-			text:    Text::Bold("Contact Information"),
+			text: Text::Bold("Contact Information"),
 		})
 		.unwrap();
 
@@ -168,7 +168,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 {
 	writeln!(output, "{}", Block::Heading {
 		indents: 3,
-		text:    timesheet.time_end.map_or_else(
+		text: timesheet.time_end.map_or_else(
 			|| format!("{} – Current", timesheet.time_begin),
 			|time_end| format!("{} – {}", timesheet.time_begin, time_end),
 		),
@@ -199,7 +199,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 					"{}\n{}",
 					Block::Heading {
 						indents: 5,
-						text:    format!("№{} – {} ({})", e.id, e.category, e.cost),
+						text: format!("№{} – {} ({})", e.id, e.category, e.cost),
 					},
 					Block::Text(&e.description),
 				)
@@ -240,27 +240,23 @@ mod tests
 		let client = Organization {
 			id: 0,
 			location: Location {
-				id:    0,
-				name:  "1337 Some Street".into(),
+				id: 0,
+				name: "1337 Some Street".into(),
 				outer: Some(
 					Location {
-						id:    1,
-						name:  "Phoenix".into(),
+						id: 1,
+						name: "Phoenix".into(),
 						outer: Some(
 							Location {
-								id:    2,
-								name:  "Arizona".into(),
+								id: 2,
+								name: "Arizona".into(),
 								outer: Some(
 									Location {
-										id:    3,
-										name:  "USA".into(),
+										id: 3,
+										name: "USA".into(),
 										outer: Some(
-											Location {
-												id:    4,
-												name:  "Earth".into(),
-												outer: None,
-											}
-											.into(),
+											Location { id: 4, name: "Earth".into(), outer: None }
+												.into(),
 										),
 									}
 									.into(),
@@ -280,7 +276,7 @@ mod tests
 
 		let mut contact_info = [
 			Contact {
-				kind:  ContactKind::Email("foo@bar.io".into()),
+				kind: ContactKind::Email("foo@bar.io".into()),
 				label: "primary email".into(),
 			},
 			Contact { kind: ContactKind::Phone("687 5309".into()), label: "primary phone".into() },
@@ -288,17 +284,17 @@ mod tests
 		];
 
 		let testy_mctesterson = Employee {
-			id:     Default::default(),
-			name:   "Testy McTesterson".into(),
+			id: Default::default(),
+			name: "Testy McTesterson".into(),
 			status: "Representative".into(),
-			title:  "CEO of Tests".into(),
+			title: "CEO of Tests".into(),
 		};
 
 		let bob = Employee {
-			id:     Default::default(),
-			name:   "Bob".into(),
+			id: Default::default(),
+			name: "Bob".into(),
 			status: "Employed".into(),
-			title:  "Janitor".into(),
+			title: "Janitor".into(),
 		};
 
 		let mut job = Job {
