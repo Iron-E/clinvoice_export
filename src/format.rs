@@ -3,7 +3,7 @@
 mod from_str;
 mod try_from;
 
-use clinvoice_schema::{Contact, Job, Organization, Timesheet};
+use winvoice_schema::{Contact, Job, Organization, Timesheet};
 use strum::{Display, EnumIter, IntoStaticStr};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
@@ -11,7 +11,7 @@ use strum::{Display, EnumIter, IntoStaticStr};
 /// # Examples
 ///
 /// ```rust
-/// use clinvoice_export::Format;
+/// use winvoice_export::Format;
 /// assert_eq!(Format::Markdown.to_string(), "markdown");
 /// ```
 #[derive(
@@ -33,7 +33,7 @@ impl Format
 	///
 	/// # Returns
 	///
-	/// * [`Some`] when all provided data uses the same [`Currency`](clinvoice_schema::Currency).
+	/// * [`Some`] when all provided data uses the same [`Currency`](winvoice_schema::Currency).
 	/// * [`None`] otherwise.
 	///
 	/// # Warnings
@@ -63,7 +63,7 @@ impl Format
 	/// # Examples
 	///
 	/// ```rust
-	/// use clinvoice_export::Format;
+	/// use winvoice_export::Format;
 	/// assert_eq!(Format::Markdown.extension(), ".md");
 	/// ```
 	pub const fn extension(&self) -> &'static str

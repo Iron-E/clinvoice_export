@@ -1,11 +1,11 @@
-# CLInvoice Export
+# Winvoice Export
 
 <!-- cargo-rdme start -->
 
-`clinvoice_export` allows converting a [`Job`](clinvoice_schema::Job) into a [`String`] which
+`winvoice_export` allows converting a [`Job`](winvoice_schema::Job) into a [`String`] which
 contains valid syntax for some specified file [`Format`].
 
-It is possible to write a new exporter as part of a custom CLInvoice frontend using the
+It is possible to write a new exporter as part of a custom Winvoice frontend using the
 modules in this crate.
 
 ## Features

@@ -6,7 +6,7 @@ mod display;
 ///
 /// ```rust
 /// use core::fmt::Write;
-/// use clinvoice_export::markdown::Block;
+/// use winvoice_export::markdown::Block;
 /// # use pretty_assertions::assert_eq;
 ///
 /// let mut expected = String::new();

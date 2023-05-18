@@ -1,5 +1,5 @@
 //! This module contains types which [`Display`] as valid Markdown syntax. It provides a
-//! [function](export_job) to export a [`Job`](clinvoice_schema::Job) as
+//! [function](export_job) to export a [`Job`](winvoice_schema::Job) as
 //! [Markdown](crate::Format::Markdown).
 
 mod block;
@@ -8,7 +8,7 @@ mod text;
 use core::fmt::Write;
 
 pub use block::Block;
-use clinvoice_schema::{
+use winvoice_schema::{
 	chrono::{DateTime, Local},
 	Contact,
 	Job,
@@ -23,7 +23,7 @@ pub use text::Text;
 ///
 /// # Returns
 ///
-/// * [`Some`] when all provided data uses the same [`Currency`](clinvoice_schema::Currency).
+/// * [`Some`] when all provided data uses the same [`Currency`](winvoice_schema::Currency).
 /// * [`None`] otherwise.
 ///
 /// # Panics
@@ -219,7 +219,7 @@ mod tests
 {
 	use core::time::Duration;
 
-	use clinvoice_schema::{
+	use winvoice_schema::{
 		chrono::Utc,
 		Contact,
 		ContactKind,

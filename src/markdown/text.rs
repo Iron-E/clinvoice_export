@@ -5,7 +5,7 @@ mod display;
 /// # Examples
 ///
 /// ```rust
-/// use clinvoice_export::markdown::Text;
+/// use winvoice_export::markdown::Text;
 /// # use pretty_assertions::assert_eq;
 ///
 /// assert_eq!(r#"*I* have a **really strong opinion** about the number $\pi$."#, format!(
