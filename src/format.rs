@@ -3,8 +3,8 @@
 mod from_str;
 mod try_from;
 
-use winvoice_schema::{Contact, Job, Organization, Timesheet};
 use strum::{Display, EnumIter, IntoStaticStr};
+use winvoice_schema::{Contact, Job, Organization, Timesheet};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
 ///

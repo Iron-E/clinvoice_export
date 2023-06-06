@@ -8,6 +8,7 @@ mod text;
 use core::fmt::Write;
 
 pub use block::Block;
+pub use text::Text;
 use winvoice_schema::{
 	chrono::{DateTime, Local},
 	Contact,
@@ -15,7 +16,6 @@ use winvoice_schema::{
 	Organization,
 	Timesheet,
 };
-pub use text::Text;
 
 /// Export some `job` to [Markdown](crate::Format::Markdown).
 ///
@@ -240,7 +240,6 @@ mod tests
 		let client = Organization {
 			id: 0,
 			location: Location {
-				id: 0,
 				name: "1337 Some Street".into(),
 				outer: Some(
 					Location {
@@ -255,18 +254,26 @@ mod tests
 										id: 3,
 										name: "USA".into(),
 										outer: Some(
-											Location { id: 4, name: "Earth".into(), outer: None }
-												.into(),
+											Location {
+												id: 4,
+												name: "Earth".into(),
+												..Default::default()
+											}
+											.into(),
 										),
+										..Default::default()
 									}
 									.into(),
 								),
+								..Default::default()
 							}
 							.into(),
 						),
+						..Default::default()
 					}
 					.into(),
 				),
+				..Default::default()
 			},
 			name: "Big Old Test".into(),
 		};
