@@ -226,6 +226,7 @@ mod tests
 		Currency,
 		Employee,
 		Expense,
+		Id,
 		Invoice,
 		Location,
 		Money,
@@ -238,24 +239,24 @@ mod tests
 	fn export()
 	{
 		let client = Organization {
-			id: 0,
+			id: Id::new_v4(),
 			location: Location {
 				name: "1337 Some Street".into(),
 				outer: Some(
 					Location {
-						id: 1,
+						id: Id::new_v4(),
 						name: "Phoenix".into(),
 						outer: Some(
 							Location {
-								id: 2,
+								id: Id::new_v4(),
 								name: "Arizona".into(),
 								outer: Some(
 									Location {
-										id: 3,
+										id: Id::new_v4(),
 										name: "USA".into(),
 										outer: Some(
 											Location {
-												id: 4,
+												id: Id::new_v4(),
 												name: "Earth".into(),
 												..Default::default()
 											}
@@ -278,8 +279,11 @@ mod tests
 			name: "Big Old Test".into(),
 		};
 
-		let testy_organization =
-			Organization { id: 1, name: "TestyCo".into(), location: client.location.clone() };
+		let testy_organization = Organization {
+			id: Id::new_v4(),
+			name: "TestyCo".into(),
+			location: client.location.clone(),
+		};
 
 		let mut contact_info = [
 			Contact {
@@ -358,7 +362,7 @@ mod tests
 			Timesheet {
 				employee: bob,
 				expenses: vec![Expense {
-					id: 120,
+					id: Id::new_v4(),
 					category: "Service".into(),
 					cost: Money::new(20_00, 2, Currency::Usd),
 					description: "Paid for someone else to clean".into(),
