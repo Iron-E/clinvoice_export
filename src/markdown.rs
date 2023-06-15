@@ -311,7 +311,7 @@ mod tests
 		let mut job = Job {
 			client,
 			date_close: None,
-			date_open: Utc::today().and_hms(0, 0, 0),
+			date_open: Utc::now().date_naive().and_hms_opt(0, 0, 0).unwrap().and_utc(),
 			id: Default::default(),
 			increment: Duration::from_secs(900),
 			invoice: Invoice { date: None, hourly_rate: Money::new(20_00, 2, Currency::Usd) },
@@ -348,14 +348,14 @@ mod tests
 			),
 		);
 
-		job.date_close = Some(Utc::today().and_hms(4, 30, 0));
+		job.date_close = Some(Utc::now().date_naive().and_hms_opt(4, 30, 0).unwrap().and_utc());
 
 		let timesheets = [
 			Timesheet {
 				employee: testy_mctesterson,
 				job: job.clone(),
-				time_begin: Utc::today().and_hms(2, 0, 0),
-				time_end: Some(Utc::today().and_hms(2, 30, 0)),
+				time_begin: Utc::now().date_naive().and_hms_opt(2, 0, 0).unwrap().and_utc(),
+				time_end: Some(Utc::now().date_naive().and_hms_opt(2, 30, 0).unwrap().and_utc()),
 				work_notes: "- Wrote the test.".into(),
 				..Default::default()
 			},
@@ -369,8 +369,8 @@ mod tests
 					..Default::default()
 				}],
 				job: job.clone(),
-				time_begin: Utc::today().and_hms(3, 0, 0),
-				time_end: Some(Utc::today().and_hms(3, 30, 0)),
+				time_begin: Utc::now().date_naive().and_hms_opt(3, 0, 0).unwrap().and_utc(),
+				time_end: Some(Utc::now().date_naive().and_hms_opt(3, 30, 0).unwrap().and_utc()),
 				work_notes: "- Clean the deck.".into(),
 				..Default::default()
 			},
