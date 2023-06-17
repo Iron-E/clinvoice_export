@@ -224,6 +224,7 @@ mod tests
 		Contact,
 		ContactKind,
 		Currency,
+		Department,
 		Employee,
 		Expense,
 		Id,
@@ -296,25 +297,28 @@ mod tests
 
 		let testy_mctesterson = Employee {
 			active: true,
-			department: "Executive".into(),
-			id: Default::default(),
+			department: Department { name: "Executive".into(), ..Default::default() },
 			name: "Testy McTesterson".into(),
 			title: "Chief Test Officer".into(),
+			..Default::default()
 		};
 
 		let bob = Employee {
 			active: true,
-			department: "Maintenance".into(),
-			id: Default::default(),
+			department: Department { name: "Maintenance".into(), ..Default::default() },
 			name: "Bob".into(),
 			title: "Janitor".into(),
+			..Default::default()
 		};
 
 		let mut job = Job {
 			client,
 			date_close: None,
 			date_open: Utc::now().date_naive().and_hms_opt(0, 0, 0).unwrap().and_utc(),
-			departments: ["Executive", "Maintenance"].map(ToOwned::to_owned).into_iter().collect(),
+			departments: ["Executive", "Maintenance"]
+				.map(|s| Department { name: s.into(), ..Default::default() })
+				.into_iter()
+				.collect(),
 			id: Default::default(),
 			increment: Duration::from_secs(900),
 			invoice: Invoice { date: None, hourly_rate: Money::new(20_00, 2, Currency::Usd) },
