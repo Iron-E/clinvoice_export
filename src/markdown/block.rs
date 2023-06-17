@@ -6,8 +6,8 @@ mod display;
 ///
 /// ```rust
 /// use core::fmt::Write;
+/// # use pretty_assertions::assert_str_eq as assert_eq;
 /// use winvoice_export::markdown::Block;
-/// # use pretty_assertions::assert_eq;
 ///
 /// let mut expected = String::new();
 ///

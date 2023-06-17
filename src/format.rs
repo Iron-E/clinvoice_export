@@ -11,6 +11,7 @@ use winvoice_schema::{Contact, Job, Organization, Timesheet};
 /// # Examples
 ///
 /// ```rust
+/// # use pretty_assertions::assert_str_eq as assert_eq;
 /// use winvoice_export::Format;
 /// assert_eq!(Format::Markdown.to_string(), "markdown");
 /// ```
@@ -63,6 +64,7 @@ impl Format
 	/// # Examples
 	///
 	/// ```rust
+	/// # use pretty_assertions::assert_str_eq as assert_eq;
 	/// use winvoice_export::Format;
 	/// assert_eq!(Format::Markdown.extension(), ".md");
 	/// ```

@@ -177,10 +177,9 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 
 	writeln!(
 		output,
-		"{}: {} {}",
+		"{}: {}",
 		Block::UnorderedList { indents: 0, text: Text::Bold("Employee") },
-		timesheet.employee.title,
-		timesheet.employee.name,
+		timesheet.employee,
 	)
 	.unwrap();
 
@@ -219,6 +218,7 @@ mod tests
 {
 	use core::time::Duration;
 
+	use pretty_assertions::assert_str_eq;
 	use winvoice_schema::{
 		chrono::Utc,
 		Contact,
@@ -295,16 +295,18 @@ mod tests
 		];
 
 		let testy_mctesterson = Employee {
+			active: true,
+			department: "Executive".into(),
 			id: Default::default(),
 			name: "Testy McTesterson".into(),
-			status: "Representative".into(),
-			title: "CEO of Tests".into(),
+			title: "Chief Test Officer".into(),
 		};
 
 		let bob = Employee {
+			active: true,
+			department: "Maintenance".into(),
 			id: Default::default(),
 			name: "Bob".into(),
-			status: "Employed".into(),
 			title: "Janitor".into(),
 		};
 
@@ -312,6 +314,7 @@ mod tests
 			client,
 			date_close: None,
 			date_open: Utc::now().date_naive().and_hms_opt(0, 0, 0).unwrap().and_utc(),
+			departments: ["Executive", "Maintenance"].map(ToOwned::to_owned).into_iter().collect(),
 			id: Default::default(),
 			increment: Duration::from_secs(900),
 			invoice: Invoice { date: None, hourly_rate: Money::new(20_00, 2, Currency::Usd) },
@@ -319,7 +322,7 @@ mod tests
 			objectives: "- I want to test this function.".into(),
 		};
 
-		assert_eq!(
+		assert_str_eq!(
 			super::export_job(&job, &mut contact_info, &testy_organization, &[]),
 			format!(
 				"# TestyCo – Job №{}
@@ -376,7 +379,7 @@ mod tests
 			},
 		];
 
-		assert_eq!(
+		assert_str_eq!(
 			super::export_job(&job, &mut contact_info, &testy_organization, &timesheets),
 			format!(
 				"# TestyCo – Job №{}
@@ -406,7 +409,7 @@ mod tests
 
 ### {} – {}
 
-- **Employee**: CEO of Tests Testy McTesterson
+- **Employee**: Chief Test Officer Testy McTesterson of the Executive department
 
 #### Work Notes
 
@@ -414,7 +417,7 @@ mod tests
 
 ### {} – {}
 
-- **Employee**: Janitor Bob
+- **Employee**: Janitor Bob of the Maintenance department
 
 #### Expenses
 

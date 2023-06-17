@@ -5,10 +5,10 @@ mod display;
 /// # Examples
 ///
 /// ```rust
+/// # use pretty_assertions::assert_str_eq;
 /// use winvoice_export::markdown::Text;
-/// # use pretty_assertions::assert_eq;
 ///
-/// assert_eq!(r#"*I* have a **really strong opinion** about the number $\pi$."#, format!(
+/// assert_str_eq!(r#"*I* have a **really strong opinion** about the number $\pi$."#, format!(
 ///   "{} have a {} about the number {}.",
 ///   Text::Italic("I"),
 ///   Text::Bold("really strong opinion"),
