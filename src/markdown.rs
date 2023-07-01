@@ -35,8 +35,8 @@ use winvoice_schema::{
 /// * The following fields must all contain valid markdown syntax:
 ///   * The `objectives` and `notes` of the `job`.
 ///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
-///   * The `category` and `description` of every [`Expense`] of the `expenses` of every
-///     [`Timesheet`] of the `timesheets`.
+///   * The `category` and `description` of every [`Expense`] of the `expenses` of every [`Timesheet`] of the
+///     `timesheets`.
 pub(super) fn export_job(
 	job: &Job,
 	contact_info: &[Contact],

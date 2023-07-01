@@ -40,8 +40,8 @@ impl Format
 	/// * The following fields must all contain valid syntax of the [`Format`] specified:
 	///   * The `objectives` and `notes` of the `job`.
 	///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
-	///   * The `category` and `description` of every [`Expense`] of the `expenses` of every
-	///     [`Timesheet`] of the `timesheets`.
+	///   * The `category` and `description` of every [`Expense`] of the `expenses` of every [`Timesheet`] of the
+	///     `timesheets`.
 	pub fn export_job(
 		&self,
 		job: &Job,
