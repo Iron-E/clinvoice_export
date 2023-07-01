@@ -46,19 +46,10 @@ pub(super) fn export_job(
 {
 	let mut output = String::new();
 
-	writeln!(output, "{}", Block::Heading {
-		indents: 1,
-		text: format!("{} – Job №{}", organization.name, job.id),
-	})
-	.unwrap();
+	writeln!(output, "{}", Block::Heading { indents: 1, text: format!("{} – Job №{}", organization.name, job.id) })
+		.unwrap();
 
-	writeln!(
-		output,
-		"{}: {}",
-		Block::UnorderedList { indents: 0, text: Text::Bold("Client") },
-		job.client,
-	)
-	.unwrap();
+	writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Client") }, job.client,).unwrap();
 
 	writeln!(
 		output,
@@ -99,11 +90,7 @@ pub(super) fn export_job(
 
 	if !contact_info.is_empty()
 	{
-		writeln!(output, "{}:", Block::UnorderedList {
-			indents: 0,
-			text: Text::Bold("Contact Information"),
-		})
-		.unwrap();
+		writeln!(output, "{}:", Block::UnorderedList { indents: 0, text: Text::Bold("Contact Information") }).unwrap();
 
 		contact_info
 			.iter()
@@ -128,13 +115,7 @@ pub(super) fn export_job(
 
 	if let Some(date) = &job.invoice.date
 	{
-		writeln!(
-			output,
-			"{}: {}",
-			Block::UnorderedList { indents: 0, text: Text::Bold("Status") },
-			date,
-		)
-		.unwrap();
+		writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Status") }, date,).unwrap();
 	}
 
 	writeln!(
@@ -175,13 +156,8 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 	})
 	.unwrap();
 
-	writeln!(
-		output,
-		"{}: {}",
-		Block::UnorderedList { indents: 0, text: Text::Bold("Employee") },
-		timesheet.employee,
-	)
-	.unwrap();
+	writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Employee") }, timesheet.employee,)
+		.unwrap();
 
 	writeln!(output, "{}", Block::<&str>::Break).unwrap();
 
@@ -196,10 +172,7 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 				writeln!(
 					output,
 					"{}\n{}",
-					Block::Heading {
-						indents: 5,
-						text: format!("№{} – {} ({})", e.id, e.category, e.cost),
-					},
+					Block::Heading { indents: 5, text: format!("№{} – {} ({})", e.id, e.category, e.cost) },
 					Block::Text(&e.description),
 				)
 			})
@@ -256,12 +229,8 @@ mod tests
 										id: Id::new_v4(),
 										name: "USA".into(),
 										outer: Some(
-											Location {
-												id: Id::new_v4(),
-												name: "Earth".into(),
-												..Default::default()
-											}
-											.into(),
+											Location { id: Id::new_v4(), name: "Earth".into(), ..Default::default() }
+												.into(),
 										),
 										..Default::default()
 									}
@@ -280,17 +249,11 @@ mod tests
 			name: "Big Old Test".into(),
 		};
 
-		let testy_organization = Organization {
-			id: Id::new_v4(),
-			name: "TestyCo".into(),
-			location: client.location.clone(),
-		};
+		let testy_organization =
+			Organization { id: Id::new_v4(), name: "TestyCo".into(), location: client.location.clone() };
 
 		let mut contact_info = [
-			Contact {
-				kind: ContactKind::Email("foo@bar.io".into()),
-				label: "primary email".into(),
-			},
+			Contact { kind: ContactKind::Email("foo@bar.io".into()), label: "primary email".into() },
 			Contact { kind: ContactKind::Phone("687 5309".into()), label: "primary phone".into() },
 			Contact { kind: ContactKind::Other("TestyCo".into()), label: "twitter".into() },
 		];

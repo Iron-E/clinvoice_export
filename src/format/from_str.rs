@@ -11,8 +11,6 @@ impl FromStr for Format
 
 	fn from_str(s: &str) -> Result<Self>
 	{
-		Self::iter()
-			.find(|f| s.eq_ignore_ascii_case(f.into()))
-			.ok_or_else(|| Error::UnsupportedFormat(s.to_owned()))
+		Self::iter().find(|f| s.eq_ignore_ascii_case(f.into())).ok_or_else(|| Error::UnsupportedFormat(s.to_owned()))
 	}
 }

@@ -15,9 +15,7 @@ use winvoice_schema::{Contact, Job, Organization, Timesheet};
 /// use winvoice_export::Format;
 /// assert_eq!(Format::Markdown.to_string(), "markdown");
 /// ```
-#[derive(
-	Copy, Clone, Debug, Display, Eq, EnumIter, Hash, IntoStaticStr, Ord, PartialEq, PartialOrd,
-)]
+#[derive(Copy, Clone, Debug, Display, Eq, EnumIter, Hash, IntoStaticStr, Ord, PartialEq, PartialOrd)]
 #[strum(serialize_all = "snake_case")]
 pub enum Format
 {
