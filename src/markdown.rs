@@ -252,7 +252,7 @@ mod tests
 		let testy_organization =
 			Organization { id: Id::new_v4(), name: "TestyCo".into(), location: client.location.clone() };
 
-		let mut contact_info = [
+		let contact_info = [
 			Contact { kind: ContactKind::Email("foo@bar.io".into()), label: "primary email".into() },
 			Contact { kind: ContactKind::Phone("687 5309".into()), label: "primary phone".into() },
 			Contact { kind: ContactKind::Other("TestyCo".into()), label: "twitter".into() },
@@ -290,7 +290,7 @@ mod tests
 		};
 
 		assert_str_eq!(
-			super::export_job(&job, &mut contact_info, &testy_organization, &[]),
+			super::export_job(&job, &contact_info, &testy_organization, &[]),
 			format!(
 				"# TestyCo – Job №{}
 
@@ -347,7 +347,7 @@ mod tests
 		];
 
 		assert_str_eq!(
-			super::export_job(&job, &mut contact_info, &testy_organization, &timesheets),
+			super::export_job(&job, &contact_info, &testy_organization, &timesheets),
 			format!(
 				"# TestyCo – Job №{}
 
