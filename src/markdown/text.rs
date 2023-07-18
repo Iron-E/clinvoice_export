@@ -15,6 +15,8 @@ mod display;
 ///   Text::Math(r#"\pi"#),
 /// ));
 /// ```
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 #[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum Text<T>
 {
