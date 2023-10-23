@@ -71,7 +71,7 @@ impl Format
 		match self
 		{
 			#[cfg(feature = "markdown")]
-			Self::Markdown => ".md",
+			Self::Markdown => "md",
 		}
 	}
 }
