@@ -6,14 +6,14 @@ mod block;
 mod text;
 
 use core::fmt::Write;
+use std::collections::BTreeMap;
 
 pub use block::Block;
 pub use text::Text;
 use winvoice_schema::{
 	chrono::{DateTime, Local},
-	Contact,
+	ContactKind,
 	Job,
-	Organization,
 	Timesheet,
 };
 
@@ -37,17 +37,14 @@ use winvoice_schema::{
 ///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
 ///   * The `category` and `description` of every [`Expense`] of the `expenses` of every [`Timesheet`] of the
 ///     `timesheets`.
-pub(super) fn export_job(
-	job: &Job,
-	contact_info: &[Contact],
-	organization: &Organization,
-	timesheets: &[Timesheet],
-) -> String
+pub(super) fn export_job(job: &Job, contact_info: &BTreeMap<String, ContactKind>, timesheets: &[Timesheet]) -> String
 {
 	let mut output = String::new();
 
-	writeln!(output, "{}", Block::Heading { indents: 1, text: format!("{} – Job №{}", organization.name, job.id) })
-		.unwrap();
+	if let Some(name) = contact_info.get("Name")
+	{
+		writeln!(output, "{}", Block::Heading { indents: 1, text: format!("{} – Job №{}", name, job.id) }).unwrap();
+	}
 
 	writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Client") }, job.client,).unwrap();
 
@@ -94,13 +91,9 @@ pub(super) fn export_job(
 
 		contact_info
 			.iter()
-			.try_for_each(|contact| {
-				writeln!(
-					output,
-					"{}: {}",
-					Block::UnorderedList { indents: 1, text: Text::Bold(&contact.label) },
-					contact.kind,
-				)
+			.filter(|(label, _)| label.as_str() != "Name")
+			.try_for_each(|(label, kind)| {
+				writeln!(output, "{}: {}", Block::UnorderedList { indents: 1, text: Text::Bold(&label) }, kind,)
 			})
 			.unwrap();
 	}
@@ -194,7 +187,6 @@ mod tests
 	use pretty_assertions::assert_str_eq;
 	use winvoice_schema::{
 		chrono::Utc,
-		Contact,
 		ContactKind,
 		Currency,
 		Department,
@@ -249,14 +241,14 @@ mod tests
 			name: "Big Old Test".into(),
 		};
 
-		let testy_organization =
-			Organization { id: Id::new_v4(), name: "TestyCo".into(), location: client.location.clone() };
-
 		let contact_info = [
-			Contact { kind: ContactKind::Email("foo@bar.io".into()), label: "primary email".into() },
-			Contact { kind: ContactKind::Phone("687 5309".into()), label: "primary phone".into() },
-			Contact { kind: ContactKind::Other("TestyCo".into()), label: "twitter".into() },
-		];
+			("primary email".into(), ContactKind::Email("foo@bar.io".into())),
+			("primary phone".into(), ContactKind::Phone("687 5309".into())),
+			("twitter".into(), ContactKind::Other("@TestyCo".into())),
+			("Name".into(), ContactKind::Other("TestyCo".into())),
+		]
+		.into_iter()
+		.collect();
 
 		let testy_mctesterson = Employee {
 			active: true,
@@ -290,7 +282,7 @@ mod tests
 		};
 
 		assert_str_eq!(
-			super::export_job(&job, &contact_info, &testy_organization, &[]),
+			super::export_job(&job, &contact_info, &[]),
 			format!(
 				"# TestyCo – Job №{}
 
@@ -310,7 +302,7 @@ mod tests
 - **Contact Information**:
 	- **primary email**: foo@bar.io
 	- **primary phone**: 687 5309
-	- **twitter**: TestyCo
+	- **twitter**: @TestyCo
 - **Hourly Rate** 20.00 USD
 - **Total Amount Owed**: 0.00 USD\n\n",
 				job.id,
@@ -347,7 +339,7 @@ mod tests
 		];
 
 		assert_str_eq!(
-			super::export_job(&job, &contact_info, &testy_organization, &timesheets),
+			super::export_job(&job, &contact_info, &timesheets),
 			format!(
 				"# TestyCo – Job №{}
 
@@ -368,7 +360,7 @@ mod tests
 - **Contact Information**:
 	- **primary email**: foo@bar.io
 	- **primary phone**: 687 5309
-	- **twitter**: TestyCo
+	- **twitter**: @TestyCo
 - **Hourly Rate** 20.00 USD
 - **Total Amount Owed**: 40.00 USD
 

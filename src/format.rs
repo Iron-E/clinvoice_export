@@ -3,8 +3,10 @@
 mod from_str;
 mod try_from;
 
+use std::collections::BTreeMap;
+
 use strum::{Display, EnumIter, IntoStaticStr};
-use winvoice_schema::{Contact, Job, Organization, Timesheet};
+use winvoice_schema::{ContactKind, Job, Timesheet};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
 ///
@@ -47,15 +49,14 @@ impl Format
 	pub fn export_job(
 		&self,
 		job: &Job,
-		contact_info: &[Contact],
-		organization: &Organization,
+		contact_info: &BTreeMap<String, ContactKind>,
 		timesheets: &[Timesheet],
 	) -> String
 	{
 		match self
 		{
 			#[cfg(feature = "markdown")]
-			Self::Markdown => crate::markdown::export_job(job, contact_info, organization, timesheets),
+			Self::Markdown => crate::markdown::export_job(job, contact_info, timesheets),
 		}
 	}
 
