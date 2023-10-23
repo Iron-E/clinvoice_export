@@ -32,12 +32,9 @@ impl Format
 {
 	/// Export some `job` to [Markdown](crate::Format::Markdown).
 	///
-	/// `contact_info` and `timesheets` are exported in the order given.
-	///
-	/// # Returns
-	///
-	/// * [`Some`] when all provided data uses the same [`Currency`](winvoice_schema::Currency).
-	/// * [`None`] otherwise.
+	/// * `contact_info` and `timesheets` are exported in the order given.
+	/// * The name of the host organization is inferred from the [`Contact`](winvoice_schema::Contact) with the 'Name'
+	///   label.
 	///
 	/// # Warnings
 	///
