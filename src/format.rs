@@ -6,7 +6,7 @@ mod try_from;
 use std::collections::BTreeMap;
 
 use strum::{Display, EnumIter, IntoStaticStr};
-use winvoice_schema::{ContactKind, Job, Timesheet};
+use winvoice_schema::{ContactKind, IncrementResult, Job, Timesheet};
 
 /// A [file format](https://en.wikipedia.org/wiki/File_format) to export information to.
 ///
@@ -48,7 +48,7 @@ impl Format
 		job: &Job,
 		contact_info: &BTreeMap<String, ContactKind>,
 		timesheets: &[Timesheet],
-	) -> String
+	) -> IncrementResult<String>
 	{
 		match self
 		{
@@ -64,7 +64,7 @@ impl Format
 	/// ```rust
 	/// # use pretty_assertions::assert_str_eq as assert_eq;
 	/// use winvoice_export::Format;
-	/// assert_eq!(Format::Markdown.extension(), ".md");
+	/// assert_eq!(Format::Markdown.extension(), "md");
 	/// ```
 	pub const fn extension(&self) -> &'static str
 	{

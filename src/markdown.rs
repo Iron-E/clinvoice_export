@@ -13,6 +13,7 @@ pub use text::Text;
 use winvoice_schema::{
 	chrono::{DateTime, Local},
 	ContactKind,
+	IncrementResult,
 	Job,
 	Timesheet,
 };
@@ -37,7 +38,11 @@ use winvoice_schema::{
 ///   * The `work_notes` of every [`Timesheet`] of the `timesheets`.
 ///   * The `category` and `description` of every [`Expense`] of the `expenses` of every [`Timesheet`] of the
 ///     `timesheets`.
-pub(super) fn export_job(job: &Job, contact_info: &BTreeMap<String, ContactKind>, timesheets: &[Timesheet]) -> String
+pub(super) fn export_job(
+	job: &Job,
+	contact_info: &BTreeMap<String, ContactKind>,
+	timesheets: &[Timesheet],
+) -> IncrementResult<String>
 {
 	let mut output = String::new();
 
@@ -111,13 +116,16 @@ pub(super) fn export_job(job: &Job, contact_info: &BTreeMap<String, ContactKind>
 		writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Status") }, date,).unwrap();
 	}
 
-	writeln!(
-		output,
-		"{}: {}",
-		Block::UnorderedList { indents: 0, text: Text::Bold("Total Amount Owed") },
-		Timesheet::total_all(timesheets, job.invoice.hourly_rate),
-	)
-	.unwrap();
+	{
+		let amount_owed = Timesheet::total_all(timesheets, job.invoice.hourly_rate)?;
+		writeln!(
+			output,
+			"{}: {}",
+			Block::UnorderedList { indents: 0, text: Text::Bold("Total Amount Owed") },
+			amount_owed
+		)
+		.unwrap();
+	}
 
 	writeln!(output, "{}", Block::<&str>::Break).unwrap();
 
@@ -125,10 +133,10 @@ pub(super) fn export_job(job: &Job, contact_info: &BTreeMap<String, ContactKind>
 	{
 		writeln!(output, "{}", Block::Heading { indents: 2, text: "Timesheets" }).unwrap();
 
-		timesheets.iter().for_each(|timesheet| export_timesheet(timesheet, &mut output));
+		timesheets.iter().try_for_each(|timesheet| export_timesheet(timesheet, &mut output))?;
 	}
 
-	output
+	Ok(output)
 }
 
 /// Export some `timesheet` to [Markdown](crate::Format::Markdown).
@@ -138,16 +146,12 @@ pub(super) fn export_job(job: &Job, contact_info: &BTreeMap<String, ContactKind>
 /// * The following fields must all contain valid markdown syntax:
 ///   * The `work_notes` of the `timesheet`.
 ///   * The `category` and `description` of every [`Expense`] of the `expenses` of the `timesheet`.
-fn export_timesheet(timesheet: &Timesheet, output: &mut String)
+fn export_timesheet(timesheet: &Timesheet, output: &mut String) -> IncrementResult<()>
 {
-	writeln!(output, "{}", Block::Heading {
-		indents: 3,
-		text: timesheet.time_end.map_or_else(
-			|| format!("{} – Current", timesheet.time_begin),
-			|time_end| format!("{} – {}", timesheet.time_begin, time_end),
-		),
-	})
-	.unwrap();
+	{
+		let (start, end) = timesheet.increment()?;
+		writeln!(output, "{}", Block::Heading { indents: 3, text: format!("{start} – {end}") }).unwrap();
+	}
 
 	writeln!(output, "{}: {}", Block::UnorderedList { indents: 0, text: Text::Bold("Employee") }, timesheet.employee,)
 		.unwrap();
@@ -177,6 +181,8 @@ fn export_timesheet(timesheet: &Timesheet, output: &mut String)
 		writeln!(output, "{}", Block::Heading { indents: 4, text: "Work Notes" }).unwrap();
 		writeln!(output, "{}", Block::Text(&timesheet.work_notes)).unwrap();
 	}
+
+	Ok(())
 }
 
 #[cfg(test)]
@@ -282,7 +288,7 @@ mod tests
 		};
 
 		assert_str_eq!(
-			super::export_job(&job, &contact_info, &[]),
+			super::export_job(&job, &contact_info, &[]).unwrap(),
 			format!(
 				"# TestyCo – Job №{}
 
@@ -339,7 +345,7 @@ mod tests
 		];
 
 		assert_str_eq!(
-			super::export_job(&job, &contact_info, &timesheets),
+			super::export_job(&job, &contact_info, &timesheets).unwrap(),
 			format!(
 				"# TestyCo – Job №{}
 
